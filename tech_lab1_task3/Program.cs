@@ -1,19 +1,25 @@
-﻿namespace tech_lab1_task3
+using System;
+using System.Collections.Generic;
+
+namespace tech_lab1_task3
 {
     public class Logic
     {
-        public static int CountLetters(string str)
+        public static List<string> CountLetters(string str)
         {
-            int count = 0;
             if (string.IsNullOrEmpty(str))
             {
-                return -1;
+                return null;
             }
+
             str = str.ToLower();
+            str = str.Replace(" ", "");
+            var results = new List<string>();
             int groupSize = 1;
+
             for (int i = 1; i < str.Length; i++)
             {
-                if (str[i] == str[i - 1]) 
+                if (str[i] == str[i - 1])
                 {
                     groupSize++;
                 }
@@ -21,19 +27,21 @@
                 {
                     if (groupSize > 1)
                     {
-                        count += groupSize;
+                        results.Add($"Количество подряд идущих букв '{str[i - 1]}': {groupSize}");
                     }
-                    groupSize = 1; 
+                    groupSize = 1;
                 }
             }
+
             if (groupSize > 1)
             {
-                count += groupSize;
+                results.Add($"Количество подряд идущих букв '{str[str.Length - 1]}': {groupSize}");
             }
-            return count;
+
+            return results;
         }
     }
-    
+
     internal class Program
     {
         static void Main(string[] args)
@@ -41,15 +49,22 @@
             Console.WriteLine("Введите строку:");
             string sentence = Console.ReadLine();
 
-            int count = Logic.CountLetters(sentence);
+            var counts = Logic.CountLetters(sentence);
 
-            if (count == -1)
+            if (counts == null)
             {
-                Console.WriteLine("Введена пустая строка ");
+                Console.WriteLine("Введена пустая строка.");
+            }
+            else if (counts.Count == 0)
+            {
+                Console.WriteLine("Нет подряд идущих одинаковых букв.");
             }
             else
             {
-                Console.WriteLine("Количество одинаковых соседних букв: " + count);
+                foreach (var result in counts)
+                {
+                    Console.WriteLine(result);
+                }
             }
         }
     }
